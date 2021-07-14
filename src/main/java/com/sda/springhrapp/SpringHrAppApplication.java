@@ -11,7 +11,6 @@ public class SpringHrAppApplication {
     public static void main(String[] args) {
         log.info("Application started!");
         SpringApplication.run(SpringHrAppApplication.class, args);
-        log.info("Application stop!");
+        log.info("Application works, you can use it!");
     }
-
 }

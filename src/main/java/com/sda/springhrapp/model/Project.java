@@ -12,13 +12,14 @@ import java.util.Set;
 @Entity()
 @Table(name = "projects")
 public class Project {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Integer projectId;
     @Column
     private String name;
-    @Transient
+    @Column
     private double budget;
     @Transient
     private String currency;

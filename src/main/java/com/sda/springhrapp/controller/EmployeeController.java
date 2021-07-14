@@ -1,8 +1,6 @@
 package com.sda.springhrapp.controller;
 
-import com.sda.springhrapp.model.Account;
 import com.sda.springhrapp.model.Employee;
-import com.sda.springhrapp.model.Project;
 import com.sda.springhrapp.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @Slf4j
@@ -22,16 +18,20 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping("/employees")
-    public ResponseEntity<String> findAllEmployeesBasedOnProject(Set<Project> projectSet){
-        List<Employee> employeeList = employeeService.findAllEmployeeByProjects(projectSet);
-        log.info("Employees found!");
-        log.debug(employeeList.toString());
-        return new ResponseEntity<>(employeeList.toString(), HttpStatus.OK);
-    }
+    //  @GetMapping("/employees")
+    //  public ResponseEntity<String> findAllEmployeesBasedOnProject(Set<Project> projectSet){
+    //      List<Employee> employeeList = employeeService.findAllEmployeeByProjects(projectSet);
+    //      log.info("Employees found!");
+    //      log.debug(employeeList.toString());
+    //      return new ResponseEntity<>(employeeList.toString(), HttpStatus.OK);
+    //  }
 
+    // TODO: 14/07/2021 assign employees to projects, add ID for employees and projects
+    // TODO: 14/07/2021 findAll,  findBy-firstname+lastname, findEmployeesByProjectId 
+    // TODO: 14/07/2021 findEmployeesByDepartmentName 
+    
     @PostMapping("/employees")
-    public ResponseEntity<String> createEmployee(@RequestBody Employee employee){
+    public ResponseEntity<String> createEmployee(@RequestBody Employee employee) {
         employeeService.saveEmployee(employee);
         log.info(employee.toString());
         return new ResponseEntity<>(employee.toString(), HttpStatus.OK);
@@ -40,15 +40,14 @@ public class EmployeeController {
     @DeleteMapping("/employees")
     @Transactional
     public ResponseEntity<String> deleteEmployee(@RequestParam(value = "minSalary") Integer minSalary,
-                                                 @RequestParam(value = "maxSalary") Integer maxSalary){
-       employeeService.deleteEmployeeWithSalariesBetween(minSalary, maxSalary);
-       return new ResponseEntity<>("Employees with salary between the specific values were deleted.", HttpStatus.OK);
+                                                 @RequestParam(value = "maxSalary") Integer maxSalary) {
+        employeeService.deleteEmployeeWithSalariesBetween(minSalary, maxSalary);
+        return new ResponseEntity<>("Employees with salary between the specific values were deleted.", HttpStatus.OK);
     }
 
     @PutMapping("/employees")
-    public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee)
-    {
-        Employee updatedEmployee= employeeService.saveEmployee(employee);
+    public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) {
+        Employee updatedEmployee = employeeService.saveEmployee(employee);
         return ResponseEntity.ok(updatedEmployee);
     }
 

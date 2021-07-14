@@ -2,17 +2,16 @@ package com.sda.springhrapp.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
+
 @Getter
 @Setter
-@ToString
 @Entity
-@Table(name = "departments") 
-public class Department
-{
+@Table(name = "departments")
+public class Department {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -23,5 +22,11 @@ public class Department
     @OneToMany(mappedBy = "department")
     private List<Employee> employeeList;
 
-
+    @Override
+    public String toString() {
+        return "Department{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

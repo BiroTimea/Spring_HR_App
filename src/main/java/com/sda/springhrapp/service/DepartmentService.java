@@ -1,14 +1,10 @@
 package com.sda.springhrapp.service;
 
 import com.sda.springhrapp.model.Department;
-import com.sda.springhrapp.model.Employee;
 import com.sda.springhrapp.repository.DepartmentRepositoryIF;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @Slf4j
@@ -18,9 +14,9 @@ public class DepartmentService {
     private DepartmentRepositoryIF departmentRepositoryIF;
 
     public Department saveDepartment(Department department){
-        departmentRepositoryIF.save(department);
+        Department departmentSaved = departmentRepositoryIF.save(department);
         log.info("Department saved successfully!");
-        return department;
+        return departmentSaved;
     }
 
     public Integer deleteById(Integer id){
@@ -42,10 +38,4 @@ public class DepartmentService {
         }
         return department;
     }
-
-    public Department findDepartmentWithEmployeeList(List<Employee> employeeList){
-         return departmentRepositoryIF.findDepartmentByEmployeeList(employeeList);
-    }
-
-
 }

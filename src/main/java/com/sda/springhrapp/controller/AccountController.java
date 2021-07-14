@@ -56,10 +56,8 @@ public class AccountController {
         return ResponseEntity.ok(updateAccount);
     }
 
-
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> catchIllegalArgumentException(IllegalArgumentException e) {
         return new ResponseEntity<>("Illegal arguments " + e.getMessage(), HttpStatus.BAD_REQUEST);
     }
-
 }
