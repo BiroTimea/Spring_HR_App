@@ -6,9 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -18,25 +19,44 @@ public class DepartmentController {
     @Autowired
     private DepartmentService departmentService;
 
-    // TODO: 14/07/2021 findAll, findById, findByName
+    @GetMapping("/departments")
+    public ResponseEntity<String> findAllDepartments() {
+        List<Department> departmentList;
+        departmentList = departmentService.findAll();
+        log.info("Department found.");
+        log.debug(departmentService.toString());
+        return new ResponseEntity<>("Departments found: " + departmentList, HttpStatus.OK);
+    }
 
-    //  @GetMapping("/departments")
-    //  public ResponseEntity<String> findDepartmentsWithEmployees(@RequestBody List<Employee> departmentList){
-    //      Department department = departmentService.findDepartmentWithEmployeeList(departmentList);
-    //      log.info("Department found!");
-    //      log.debug(departmentService.toString());
-    //      return new ResponseEntity<>("Department found " + department, HttpStatus.OK);
-    //  }
+    @GetMapping("/departments/find")
+    public ResponseEntity<String> findDepartmentByIdOrName(@RequestParam(value = "name", required = false) String name,
+                                                           @RequestParam(value = "id", required = false) Integer id) {
+
+        Department department;
+        if ((!(isBlank(name)) && id != null) || (isBlank(name) && id == null)) {
+            throw new IllegalArgumentException("Please provide one of the options. Name or Id.");
+        } else if (!isBlank(name)) {
+            department = departmentService.findDepartmentByName(name);
+        } else {
+            department = departmentService.findDepartmentById(id);
+        }
+        return new ResponseEntity<>(department.toString(), HttpStatus.OK);
+    }
+
+    private boolean isBlank(String name) {
+        return name == null || name.isEmpty();
+    }
 
     @PostMapping("/departments")
     public ResponseEntity<String> createDepartment(@RequestBody Department department) {
         Department response = departmentService.saveDepartment(department);
         if (response.getName() == null || response.getName().isEmpty()) {
-            log.warn("Something went wrong, department not saved!");
-            return new ResponseEntity<>("Something went wrong, the department was saved but it's empty!", HttpStatus.BAD_REQUEST);
+            log.warn("Department got saved but it's empty");
+            return new ResponseEntity<>("Department got saved but it's empty", HttpStatus.BAD_REQUEST);
+
         } else {
-            log.info(department.toString());
-            return new ResponseEntity<>(response.toString(), HttpStatus.OK);
+            log.info(response.toString());
+            return new ResponseEntity<>(response.toString(), HttpStatus.CREATED);
         }
     }
 
@@ -45,29 +65,26 @@ public class DepartmentController {
     public ResponseEntity<String> deleteDepartment(@RequestParam(value = "name", required = false) String name,
                                                    @RequestParam(value = "id", required = false) Integer id) {
 
-        Integer response ;
+        Integer resultOfDelete;
         if ((!(isBlank(name)) && id != null) || (isBlank(name) && id == null)) {
-            throw new IllegalArgumentException("Please provide one of the options. Username or Id.");
+            throw new IllegalArgumentException("Please provide one of the options. Name or Id.");
         } else if (!isBlank(name)) {
-            response = departmentService.deleteByName(name);
+            resultOfDelete = departmentService.deleteByName(name);
         } else {
-            response = departmentService.deleteById(id);
+            resultOfDelete = departmentService.deleteById(id);
         }
-        if ( response == 1) {
-            return new ResponseEntity<>("Department has been removed.", HttpStatus.OK);
+        if (resultOfDelete == 1) {
+            return new ResponseEntity<>("Department with id " + id + " has been removed.", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("The requested department does not exist!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Department was not deleted because it does not exist or something went wrong.", HttpStatus.BAD_REQUEST);
         }
     }
 
-    private boolean isBlank(String name) {
-        return name == null || name.isEmpty();
-    }
 
     @PutMapping("/departments")
     public ResponseEntity<Department> updateDepartment(@RequestBody Department department) {
-        Department updateDepartment = departmentService.saveDepartment(department);
-        return ResponseEntity.ok(updateDepartment);
+        Department updatedDepartment = departmentService.saveDepartment(department);
+        return ResponseEntity.ok(updatedDepartment);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

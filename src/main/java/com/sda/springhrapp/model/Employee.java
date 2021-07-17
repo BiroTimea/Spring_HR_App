@@ -1,6 +1,7 @@
 package com.sda.springhrapp.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,10 +10,10 @@ import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name="employees")
 public class Employee {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -38,12 +39,12 @@ public class Employee {
     @JoinColumn(name = "department_id")
     private Department department;
 
+
     @ManyToMany
     @JoinTable(name = "employees_project",
-            joinColumns = {@JoinColumn(name = "employee_id")},
-            inverseJoinColumns = {@JoinColumn(name = "project_id")})
-    private Set<Project> projects = new HashSet<>();
+            joinColumns = {@JoinColumn(name = "employee_Id")},
+            inverseJoinColumns = {@JoinColumn(name = "project_Id")})
+    private Set<Project> projects= new HashSet<>();
+
 }
-
-
 

@@ -12,15 +12,16 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "humanresources/api")
+@RequestMapping(value = "/humanresources/api")
 public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
 
     @GetMapping("/projects")
-    public ResponseEntity<String> findAllProjects(@RequestParam(value = "budget") double x) {
-        List<Project> projectList = projectService.findAllProjectWithBudget(x);
+    public ResponseEntity<String> findAllProjects(@RequestParam(value = "budget") double x)
+    {
+        List<Project> projectList= projectService.findAllProjectWithBudget(x);
         log.info("projects found.");
         log.debug(projectList.toString());
         return new ResponseEntity<>(projectList.toString(), HttpStatus.OK);
@@ -39,8 +40,8 @@ public class ProjectController {
     }
 
     @PutMapping("/projects")
-    public ResponseEntity<Project> updateEmployee(@RequestBody Project project) {
-        Project updatedProject = projectService.saveProject(project);
+    public ResponseEntity<Project> updateEmployee( @RequestBody Project project) {
+        Project updatedProject= projectService.saveProject(project);
         return ResponseEntity.ok(updatedProject);
     }
 }
