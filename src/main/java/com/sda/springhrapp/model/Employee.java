@@ -3,6 +3,7 @@ package com.sda.springhrapp.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -16,23 +17,23 @@ import java.util.Set;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name="employeeId")
     private Integer id;
-    @Column
+    @Column(name="firstName")
     private String firstName;
-    @Column
+    @Column(name="lastName")
     private String lastName;
-    @Column
+    @Column(name="dateOfBirth")
     private java.sql.Date dateOfBirth;
-    @Column
+    @Column(name="phoneNumber")
     private String phoneNumber;
-    @Column
+    @Column(name="email")
     private String email;
-    @Column
+    @Column(name="salary")
     private Integer salary;
 
-    @OneToOne
-    @JoinColumn(name = "account_id")
+    @OneToOne()
+    @JoinColumn(name = "account_id") // account_id is from the database.
     private Account account;
 
     @ManyToOne
@@ -46,5 +47,17 @@ public class Employee {
             inverseJoinColumns = {@JoinColumn(name = "project_Id")})
     private Set<Project> projects= new HashSet<>();
 
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id+ '\'' +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", salary=" + salary +
+                '}';
+    }
 }
 

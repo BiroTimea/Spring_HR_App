@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 @RestController
@@ -18,14 +19,11 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
-//todo FindAll Employees, find specific employees.
 
-    @GetMapping("/employees/department")
-    public ResponseEntity<String> findEmployeesByDepartment(
-            @RequestParam(value = "departmentId", required = true) Integer departmentId) {
-        return null;
+    @GetMapping("employees/department")
+    public ResponseEntity<String> findEmployeesByDepartment(@RequestParam(value = "departmentName") String departmentName) {
+        return new ResponseEntity<>(employeeService.findEmployeesByDepartmentName(departmentName).toString(), HttpStatus.OK);
     }
-
 
     @GetMapping("/employees")
     public ResponseEntity<String> findAll() {
@@ -39,12 +37,26 @@ public class EmployeeController {
     public ResponseEntity<String> findSpecificEmployee(@RequestParam(value = "firstName", required = false) String firstName,
                                                        @RequestParam(value = "LastName", required = false) String lastName,
                                                        @RequestParam(value = "email", required = false) String email,
-                                                       @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
-                                                       @RequestParam(value = "departmentId", required = false) Integer id) {
+                                                       @RequestParam(value = "phoneNumber", required = false) String phoneNumber) {
 
-        Employee foundEmployee;
-        foundEmployee = employeeService.findSpecificEmployee(firstName, lastName, email, phoneNumber, id);
-        return new ResponseEntity<>(foundEmployee.toString(), HttpStatus.OK);
+//        List<Employee> foundEmployee;
+//        foundEmployee = employeeService.findSpecificEmployee(firstName, lastName, email, phoneNumber, id);
+//        return new ResponseEntity<>(foundEmployee.toString(), HttpStatus.OK);
+        if (isBlank(firstName) && isBlank(lastName)) {
+            List<Employee> employeeList;
+            employeeList = employeeService.findSpecificEmployeeByFirstAndLastName(firstName, lastName);
+            return new ResponseEntity<>(employeeList.toString(), HttpStatus.OK);
+        } else if (isBlank(email) || isBlank(phoneNumber)) {
+            List<Employee> employeeList;
+            employeeList = employeeService.findSpecificEmployeeByPhoneNumberOrEmail(email, phoneNumber);
+            return new ResponseEntity<>(employeeList.toString(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Something went wrong, check your parameters", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private boolean isBlank(String condition) {
+        return (condition != null && !condition.isEmpty());
     }
 
     //todo Assign Employee to projects, add ID for employees and project
@@ -55,7 +67,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employee.toString(), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/employees")
+    @DeleteMapping("/employees/deleteBySalaryBetween")
     @Transactional
     public ResponseEntity<String> deleteEmployee(@RequestParam(value = "minSalary") Integer minSalary,
                                                  @RequestParam(value = "maxSalary") Integer maxSalary) {
@@ -69,6 +81,14 @@ public class EmployeeController {
     public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) {
         Employee updatedEmployee = employeeService.saveEmployee(employee);
         return ResponseEntity.ok(updatedEmployee);
+    }
+
+    @PutMapping("/employees/assignProjects")
+    public ResponseEntity<String> assignEmployeeToProject(@RequestParam(value = "employeeId") Integer employeeId,
+                                                          @RequestParam(value = "projectId") Integer projectId)
+    {
+        employeeService.assignEmployeeToProject(employeeId, projectId);
+        return new ResponseEntity<>("Employee with id "+ employeeId+ " assigned to project with id "+ projectId, HttpStatus.OK);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

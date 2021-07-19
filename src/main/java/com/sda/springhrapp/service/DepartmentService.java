@@ -1,11 +1,14 @@
 package com.sda.springhrapp.service;
 
 import com.sda.springhrapp.model.Department;
+import com.sda.springhrapp.model.Employee;
 import com.sda.springhrapp.repository.DepartmentRepositoryIf;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,7 +21,7 @@ public class DepartmentService {
     public Department saveDepartment(Department department)
     {
         Department departmentSaved = departmentRepositoryIf.save(department);
-        log.info("Department saved successfully.");
+        log.info("Department saved succesfully.");
         return departmentSaved;
     }
 

@@ -1,5 +1,6 @@
 package com.sda.springhrapp.controller;
 
+import com.sda.springhrapp.exception.AccountServiceException;
 import com.sda.springhrapp.model.Account;
 import com.sda.springhrapp.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +30,7 @@ public class AccountController {
     }
 
     @PostMapping("/accounts")
-    public ResponseEntity<String> createAccount(@RequestBody Account account)
-    {
+    public ResponseEntity<String> createAccount(@RequestBody Account account) throws AccountServiceException {
         accountService.saveAccount(account);
         log.info(account.toString());
         return new ResponseEntity<>(account.toString(), HttpStatus.CREATED);
@@ -62,8 +62,7 @@ public class AccountController {
     }
 
     @PutMapping("/accounts")
-    public ResponseEntity<Account> updateAccount(@RequestBody Account account)
-    {
+    public ResponseEntity<Account> updateAccount(@RequestBody Account account) throws AccountServiceException {
         Account updatedAccount= accountService.saveAccount(account);
         return ResponseEntity.ok(updatedAccount);
     }
@@ -73,5 +72,8 @@ public class AccountController {
         return new ResponseEntity<>("Illegal arguments " + e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-
+    @ExceptionHandler(AccountServiceException.class)
+    public ResponseEntity<String> catchAccountServiceException(AccountServiceException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

@@ -3,6 +3,7 @@ package com.sda.springhrapp.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -16,16 +17,16 @@ import java.util.Set;
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "projectId")
     private Integer id;
-    @Column
+    @Column(name = "projectName")
     private String name;
     @Column
     private double budget;
     @Transient
     private String currency;
     @Enumerated(EnumType.STRING)
-    @Column
+    @Column(name="type")
     private ProjectType projectType;
 
     @ManyToMany(mappedBy = "projects", cascade = CascadeType.ALL)
