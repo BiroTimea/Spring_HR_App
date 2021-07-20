@@ -3,7 +3,6 @@ package com.sda.springhrapp.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -23,14 +22,23 @@ public class Project {
     private String name;
     @Column
     private double budget;
-    @Transient
+    @Column
     private String currency;
     @Enumerated(EnumType.STRING)
-    @Column(name="type")
+    @Column()
     private ProjectType projectType;
 
     @ManyToMany(mappedBy = "projects", cascade = CascadeType.ALL)
-    private Set<Employee> employees= new HashSet<>();
+    private Set<Employee> employees = new HashSet<>();
 
-
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", budget=" + budget +
+                ", currency='" + currency + '\'' +
+                ", projectType=" + projectType +
+                '}';
+    }
 }

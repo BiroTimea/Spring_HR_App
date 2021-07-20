@@ -3,7 +3,6 @@ package com.sda.springhrapp.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -13,23 +12,23 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name="employees")
+@Table(name = "employees")
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="employeeId")
+    @Column
     private Integer id;
-    @Column(name="firstName")
+    @Column
     private String firstName;
-    @Column(name="lastName")
+    @Column
     private String lastName;
-    @Column(name="dateOfBirth")
+    @Column
     private java.sql.Date dateOfBirth;
-    @Column(name="phoneNumber")
+    @Column
     private String phoneNumber;
-    @Column(name="email")
+    @Column
     private String email;
-    @Column(name="salary")
+    @Column
     private Integer salary;
 
     @OneToOne()
@@ -45,12 +44,12 @@ public class Employee {
     @JoinTable(name = "employees_project",
             joinColumns = {@JoinColumn(name = "employee_Id")},
             inverseJoinColumns = {@JoinColumn(name = "project_Id")})
-    private Set<Project> projects= new HashSet<>();
+    private Set<Project> projects = new HashSet<>();
 
     @Override
     public String toString() {
         return "Employee{" +
-                "id=" + id+ '\'' +
+                "id=" + id + '\'' +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", dateOfBirth=" + dateOfBirth +

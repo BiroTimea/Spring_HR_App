@@ -26,18 +26,18 @@ public class AccountService {
         Optional<Employee> employee = employeeRepositoryIf.findById(accountIntroduced.getEmployee().getId());
         if (employee.isPresent()) {
             accountIntroduced.setEmployee(employee.get());
-            Account accountSaved= accountRepositoryIf.save(accountIntroduced);
+            Account accountSaved = accountRepositoryIf.save(accountIntroduced);
             employee.get().setAccount(accountSaved); // get around this somehow.
             employeeRepositoryIf.save(accountSaved.getEmployee());
             log.info("Account saved successfully.");
 
 //        Account accountSaved;
 //        accountSaved = accountRepositoryIf.save(accountIntroduced);
-        return accountSaved;
+            return accountSaved;
 
         } else {
             //todo throw new CUSTOM account service exception and create an ExceptionHandler in Controller HOMEWORK
-            throw new AccountServiceException("something went wrong with the account. It was not saved.");
+            throw new AccountServiceException("Something went wrong with the account. It was not saved.");
         }
     }
 
@@ -45,9 +45,9 @@ public class AccountService {
     public Integer deleteAccountById(Integer id) {
         Integer account = accountRepositoryIf.deleteAccountById(id);
         if (account != 0) {
-            log.info("account with id " + id + " was game ended");
+            log.info("Account with id " + id + " was game ended");
         } else {
-            log.warn("account didn't get game ended.");
+            log.warn("Account didn't get game ended.");
         }
         return account;
     }

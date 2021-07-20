@@ -21,9 +21,8 @@ public class AccountController {
     private AccountService accountService;
 
     @GetMapping("/accounts")
-    public ResponseEntity<String> findAllAccounts()
-    {
-        List<Account> accountList= accountService.findAllAccounts();
+    public ResponseEntity<String> findAllAccounts() {
+        List<Account> accountList = accountService.findAllAccounts();
         log.info("Accounts found.");
         log.debug(accountList.toString());
         return new ResponseEntity<>(accountList.toString(), HttpStatus.OK);
@@ -38,42 +37,26 @@ public class AccountController {
 
     @DeleteMapping("/accounts")
     @Transactional
-    public ResponseEntity<String> deleteAccount(@RequestParam(value= "id") Integer id)
-    {
+    public ResponseEntity<String> deleteAccount(@RequestParam(value = "id") Integer id) {
         Integer result;
-        if(id==null)
-        {
+        if (id == null) {
             throw new IllegalArgumentException("id can't be null");
-        }
-        else
-        {
-            result=accountService.deleteAccountById(id);
-            if(result==0)
-            {
+        } else {
+            result = accountService.deleteAccountById(id);
+            if (result == 0) {
                 log.info("Account did not get deleted.");
                 return new ResponseEntity<>("Can't delete what doesn't exist.", HttpStatus.I_AM_A_TEAPOT);
-            }
-            else {
+            } else {
                 log.info("account has been removed.");
-                return new ResponseEntity<>("Account with id "+ id +" has been removed.", HttpStatus.OK);
+                return new ResponseEntity<>("Account with id " + id + " has been removed.", HttpStatus.OK);
             }
         }
-
     }
 
     @PutMapping("/accounts")
     public ResponseEntity<Account> updateAccount(@RequestBody Account account) throws AccountServiceException {
-        Account updatedAccount= accountService.saveAccount(account);
+        Account updatedAccount = accountService.saveAccount(account);
         return ResponseEntity.ok(updatedAccount);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> catchIllegalArgumentException(IllegalArgumentException e) {
-        return new ResponseEntity<>("Illegal arguments " + e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(AccountServiceException.class)
-    public ResponseEntity<String> catchAccountServiceException(AccountServiceException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
 }

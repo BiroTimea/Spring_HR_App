@@ -1,5 +1,7 @@
 package com.sda.springhrapp.service;
 
+import com.sda.springhrapp.exception.EmployeeServiceException;
+import com.sda.springhrapp.exception.ProjectServiceException;
 import com.sda.springhrapp.model.Account;
 import com.sda.springhrapp.model.Employee;
 import com.sda.springhrapp.model.Project;
@@ -13,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -74,18 +75,24 @@ public class EmployeeService {
     }
 
     public List<Employee> findEmployeesByDepartmentName(String departmentName) {
-        return employeeRepositoryIf.findAllByDepartment_Name(departmentName);
+        return employeeRepositoryIf.findAllEmployeesByDepartment_Name(departmentName);
     }
 
     public void assignEmployeeToProject(Integer employeeId, Integer projectId) {
-        Optional<Employee> employee = employeeRepositoryIf.findById(employeeId);
-        Optional<Project> project = projectRepositoryIf.findById(projectId);
-        if (project.isPresent() && employee.isPresent()) {
-            employee.get().getProjects().add(project.get());
-            project.get().getEmployees().add(employee.get());
-            employeeRepositoryIf.save(employee.get());
-            projectRepositoryIf.save(project.get());
-        }
+        Employee employee = employeeRepositoryIf.findById(employeeId).orElseThrow(() -> new EmployeeServiceException("Employee not found."));
+        Project project = projectRepositoryIf.findById(projectId).orElseThrow(() -> new ProjectServiceException("Project not found"));
 
+        employee.getProjects().add(project);
+        project.getEmployees().add(employee);
+        employeeRepositoryIf.save(employee);
+        projectRepositoryIf.save(project);
+
+//          EITHER THIS OR .orElseThrow
+//        if (project.isPresent() && employee.isPresent()) {
+//            employee.get().getProjects().add(project.get());
+//            project.get().getEmployees().add(employee.get());
+//            employeeRepositoryIf.save(employee.get());
+//            projectRepositoryIf.save(project.get());
+//        }
     }
 }

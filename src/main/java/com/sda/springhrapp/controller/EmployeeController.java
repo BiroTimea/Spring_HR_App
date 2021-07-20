@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 @RestController
@@ -59,7 +58,6 @@ public class EmployeeController {
         return (condition != null && !condition.isEmpty());
     }
 
-    //todo Assign Employee to projects, add ID for employees and project
     @PostMapping("/employees")
     public ResponseEntity<String> createEmployee(@RequestBody Employee employee) {
         employeeService.saveEmployee(employee);
@@ -85,15 +83,9 @@ public class EmployeeController {
 
     @PutMapping("/employees/assignProjects")
     public ResponseEntity<String> assignEmployeeToProject(@RequestParam(value = "employeeId") Integer employeeId,
-                                                          @RequestParam(value = "projectId") Integer projectId)
-    {
+                                                          @RequestParam(value = "projectId") Integer projectId) {
         employeeService.assignEmployeeToProject(employeeId, projectId);
-        return new ResponseEntity<>("Employee with id "+ employeeId+ " assigned to project with id "+ projectId, HttpStatus.OK);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> catchIllegalArgumentException(IllegalArgumentException e) {
-        return new ResponseEntity<>("Illegal arguments " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Employee with id " + employeeId + " assigned to project with id " + projectId, HttpStatus.OK);
     }
 
 }

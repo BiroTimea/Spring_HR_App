@@ -1,14 +1,11 @@
 package com.sda.springhrapp.service;
 
 import com.sda.springhrapp.model.Department;
-import com.sda.springhrapp.model.Employee;
 import com.sda.springhrapp.repository.DepartmentRepositoryIf;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,10 +15,9 @@ public class DepartmentService {
     @Autowired
     private DepartmentRepositoryIf departmentRepositoryIf;
 
-    public Department saveDepartment(Department department)
-    {
+    public Department saveDepartment(Department department) {
         Department departmentSaved = departmentRepositoryIf.save(department);
-        log.info("Department saved succesfully.");
+        log.info("Department saved successfully.");
         return departmentSaved;
     }
 
@@ -47,18 +43,15 @@ public class DepartmentService {
         return department;
     }
 
-    public List<Department> findAll()
-    {
+    public List<Department> findAll() {
         return departmentRepositoryIf.findAll();
     }
 
-    public Department findDepartmentByName(String name)
-    {
+    public Department findDepartmentByName(String name) {
         return departmentRepositoryIf.findByName(name);
     }
 
-    public Department findDepartmentById(Integer id)
-    {
+    public Department findDepartmentById(Integer id) {
         return departmentRepositoryIf.findByIdIs(id);
     }
 
