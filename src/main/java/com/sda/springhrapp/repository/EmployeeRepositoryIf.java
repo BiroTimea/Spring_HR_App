@@ -4,6 +4,7 @@ import com.sda.springhrapp.model.Employee;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -12,9 +13,6 @@ public interface EmployeeRepositoryIf extends CrudRepository<Employee, Integer> 
 
     List<Employee> findAll();
 
-    //todo Make 2 methods, one with firstName & lastName, one with email, phoneNumber
-    //firstName & lastName return a list as they are not unique identifiers
-    //email, phoneNumber return a single Employee as they ARE unique identifiers
     List<Employee> findEmployeeByFirstNameAndLastName(String firstName, String lastName);
 
     List<Employee> findEmployeeByEmailOrPhoneNumber(String email, String phoneNumber);
@@ -22,4 +20,5 @@ public interface EmployeeRepositoryIf extends CrudRepository<Employee, Integer> 
     List<Employee> findAllByDepartment_Id(Integer id);
 
     List<Employee> findAllEmployeesByDepartment_Name(String departmentName);
+
 }
